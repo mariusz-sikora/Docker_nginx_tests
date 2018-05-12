@@ -1,6 +1,8 @@
 version: "2"
 services:
     nginx:
+        depends_on:
+            - dev2
         image: nginx:alpine
         ports:
             - 80:80
@@ -13,4 +15,14 @@ services:
             - ./certs/dhparam.pem:/etc/ssl/certs/dhparam.pem
             - ./snippets/self-signed.conf:/etc/nginx/snippets/self-signed.conf
             - ./snippets/ssl-params.conf:/etc/nginx/snippets/ssl-params.conf
+        restart: always
+
+    dev2:
+        image: nginx:alpine
+        volumes:
+            - ./nginx-dev2.conf:/etc/nginx/nginx.conf
+            - ./dev2.cloud_test.pl:/var/www/dev2.cloud_test.pl
+            - ./private/nginx-selfsigned.key:/etc/ssl/private/nginx-selfsigned.key
+            - ./certs:/etc/ssl/certs
+            - ./snippets:/etc/nginx/snippets
         restart: always
